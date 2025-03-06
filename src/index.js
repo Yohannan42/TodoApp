@@ -4,7 +4,8 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import taskRoutes from "./routes/taskRoutes.js";
 import navigationRoutes from "./routes/navigationRoutes.js";
-import moodRoutes from "./routes/moodRoutes.js"; 
+import moodRoutes from "./routes/moodRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -15,25 +16,35 @@ const PORT = process.env.PORT || 5002;
 connectDB();
 
 // Middleware
-app.use(cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"], // Allow both frontend URLs
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-}));
-
 app.use(express.json());
 
-// Routes
+// **✅ Improved CORS Configuration**
+const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
+
+app.use(cors({
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
+}));
+
+// **✅ Handle Preflight Requests**
+app.options("*", (req, res) => {
+    res.sendStatus(200);
+});
+
+// **✅ Routes**
 app.use("/api/tasks", taskRoutes);
 app.use("/api/navigation", navigationRoutes);
-app.use("/api/moods", moodRoutes); 
+app.use("/api/moods", moodRoutes);
+app.use("/api/auth", authRoutes);
 
-// Root route
+// **✅ Root Route**
 app.get("/", (req, res) => {
     res.send("Welcome to the My Project Backend!");
 });
 
-// Start the server
+// **✅ Start Server**
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`✅ Server running on http://localhost:${PORT}`);
 });

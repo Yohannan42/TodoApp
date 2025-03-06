@@ -5,7 +5,6 @@ export const getNavigationItems = (req, res) => {
         { id: 3, name: "Productivity Status", path: "/productivity" },
         { id: 4, name: "Mood Tracker", path: "/mood-tracker" },
         { id: 5, name: "Calendar", path: "/calendar" },
-        { id: 6, name: "Extras", path: "/extras" },
     ];
 
     res.status(200).json(navigationItems);
